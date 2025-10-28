@@ -124,6 +124,8 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
                 width = "100%"
                 ) 
     
+    netSudoku.toggle_physics(False)
+    
     nodeColorsDict={}
     nodeTitlesDict={}
     nodeLabelsDict={}
