@@ -178,7 +178,7 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
             
     
     # initialize graph
-    g = nx.Graph()
+    g = nx.DiGraphGraph()
     
     # add the nodes
     for node in nodes:
