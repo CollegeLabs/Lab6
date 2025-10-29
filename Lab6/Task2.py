@@ -156,7 +156,7 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
 
     for node in nodes:
         if node[0]=="A":
-            y_coords.setdefault(node,50)            
+            y_coords.setdefault(node,50)        #I really dont think this is work as it should     
         elif node[0]=="B":
             y_coords.setdefault(node,100)
         elif node[0]=="C":
@@ -182,7 +182,7 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
     
     # add the nodes
     for node in nodes:
-        g.add_node(node, color=nodeColorsDict[node], size=10, title=nodeTitlesDict[node], label=nodeLabelsDict[node],  x_coord=x_coords[node],y_coord=y_coords[node])
+        g.add_node(node, color=nodeColorsDict[node], size=10, title=nodeTitlesDict[node], label=nodeLabelsDict[node],  x=x_coords[node],y=y_coords[node])
 
     # add the edges
     print(SudokuCSP.neighbors)
