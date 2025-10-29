@@ -151,27 +151,27 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
             nodeLabelsDict.setdefault(node,"")      
            
             
-    x_coords = []
-    y_coords = []
+    x_coords = {}
+    y_coords = {} #this part is what controls the location 
 
     for node in nodes:
-        if node[0].lower()=="a":
+        if node[0]=="A":
             y_coords.setdefault(node,50)            
-        elif node[0].lower()=="b":
+        elif node[0]=="B":
             y_coords.setdefault(node,100)
-        elif node[0].lower()=="c":
+        elif node[0]=="C":
             y_coords.setdefault(node,150)
-        elif node[0].lower()=="d":
+        elif node[0]=="D":
             y_coords.setdefault(node,200)
-        elif node[0].lower()=="e":
+        elif node[0]=="E":
             y_coords.setdefault(node,250)
-        elif node[0].lower()=="f":
+        elif node[0]=="F":
             y_coords.setdefault(node,300)
-        elif node[0].lower()=="g":
+        elif node[0]=="G":
             y_coords.setdefault(node,350)
-        elif node[0].lower()=="h":
+        elif node[0]=="H":
             y_coords.setdefault(node,400)
-        elif node[0].lower()=="i":
+        elif node[0]=="I":
             y_coords.setdefault(node,450)
         x_coords.setdefault(node,int(node[1])*50)
            
