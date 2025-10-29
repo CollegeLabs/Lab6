@@ -151,8 +151,8 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
             nodeLabelsDict.setdefault(node,"")      
            
             
-    x_coords = {}
-    y_coords = {}
+    x_coords = []
+    y_coords = []
 
     for node in nodes:
         if node[0].lower()=="a":
@@ -178,7 +178,7 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
             
     
     # initialize graph
-    g = nx.DiGraph()
+    g = nx.Graph()
     
     # add the nodes
     for node in nodes:
@@ -200,7 +200,6 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
     print(g.edges)
     # generate the graph
     netSudoku.from_nx(g)
-    #netSudoku.toggle_physics(False)
     
     netSudoku.save_graph('L6_SimpleSudoku.html')
     HtmlFile = open(f'L6_SimpleSudoku.html', 'r', encoding='utf-8')
