@@ -66,4 +66,4 @@ for node in nodes:
 for nodeFrom in task1CSP.neighbors.keys():
     for nodeTo in task1CSP.neighbors[nodeFrom]:
         net_task1_AC3.add_edge(nodeFrom, nodeTo, size=sizes)
-net_task1_AC3.show("Task1GraphAC3.html", notebook=False)
+#net_task1_AC3.show("Task1GraphAC3.html", notebook=False)
