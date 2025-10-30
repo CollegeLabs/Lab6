@@ -137,7 +137,7 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
     nodes=list(SudokuCSP.variables)
 
     for node in nodes:
-        if len(SudokuCSP.curr_domains[node])==1:
+        if len(SudokuCSP.domains[node])==1:
             nodeColorsDict.setdefault(node,nodeColors["filled"])
             if ac3:
                 nodeTitlesDict.setdefault(node,str(SudokuCSP.curr_domains[node][0]))
