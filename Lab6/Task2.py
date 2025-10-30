@@ -39,8 +39,8 @@ def main():
             buildGraph(basicSudokuCSP, nodeColors, True)
 
             if st.button("Run Backtrack"):
-                backtracking_search(basicSudokuCSP)
-                buildGraph(basicSudokuCSP, nodeColors, True)
+                SudokuCSP = backtracking_search(basicSudokuCSP)
+                buildGraph(SudokuCSP, nodeColors, True)
             
         
         #st.button("Run AC-3", on_click= , args= [option])
@@ -157,11 +157,11 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
            
             
     x_coords = {}
-    y_coords = {} #this part is what controls the location 
+    y_coords = {} 
 
     for node in nodes:
         if node[0]=="A":
-            y_coords.setdefault(node,50)        #I really dont think this is work as it should     
+            y_coords.setdefault(node,50)           
         elif node[0]=="B":
             y_coords.setdefault(node,100)
         elif node[0]=="C":
