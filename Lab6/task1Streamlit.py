@@ -42,7 +42,10 @@ for node in nodes:
 for nodeFrom in task1CSP.neighbors.keys():
     for nodeTo in task1CSP.neighbors[nodeFrom]:
         net_task1.add_edge(nodeFrom, nodeTo, size=sizes)
-net_task1.show("Task1Graph.html", notebook=False)
+net_task1.save_graph("Task1Graph.html")
+with open("Task1Graph.html", "r", encoding="utf-8") as f:
+    html_graph=f.read()
+st.components.v1.html(html_graph, height=750, width=None)
 
 AC3(task1CSP)
 
@@ -66,4 +69,7 @@ for node in nodes:
 for nodeFrom in task1CSP.neighbors.keys():
     for nodeTo in task1CSP.neighbors[nodeFrom]:
         net_task1_AC3.add_edge(nodeFrom, nodeTo, size=sizes)
-#net_task1_AC3.show("Task1GraphAC3.html", notebook=False)
+net_task1_AC3.save_graph("Task1GraphAC3.html")
+with open("Task1GraphAC3.html", "r", encoding="utf-8") as f:
+    html_graph=f.read()
+st.components.v1.html(html_graph, height=750, width=None)
