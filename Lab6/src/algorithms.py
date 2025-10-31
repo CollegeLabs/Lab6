@@ -24,7 +24,7 @@ def AC3(csp):
       for Xk in csp.neighbors[Xi]:
         if Xk != Xj:
           queue.put((Xk, Xi))
-    #print(f"Queue: {list(queue.queue)}")
+    print(f"Queue: {list(queue.queue)}")
 
     '''print(f'Arc {(Xj, Xi)} is cheking')
     revised, checks1 = back_revise(csp, Xi, Xj, checks)
