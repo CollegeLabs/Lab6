@@ -37,6 +37,7 @@ def main():
     if st.button("Run AC-3"):
         AC3(basicSudokuCSP)
         buildGraph(basicSudokuCSP, nodeColors, True)
+        st.session_state["clicked"] = True
 
         if st.button("Run Backtrack Search"):
             backtracking_search(basicSudokuCSP)
@@ -213,7 +214,7 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
     
     netSudoku.save_graph('L6_SimpleSudoku.html')
     HtmlFile = open(f'L6_SimpleSudoku.html', 'r', encoding='utf-8')
-    components.html(HtmlFile.read(), height = 700,width=1000)
+    components.html(HtmlFile.read(), height = 1200,width=1000)
     
     
     
