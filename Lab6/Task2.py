@@ -37,7 +37,6 @@ def main():
     if st.button("Run AC-3"):
         AC3(basicSudokuCSP)
         buildGraph(basicSudokuCSP, nodeColors, True)
-        st.session_state["clicked"] = True
 
         if st.button("Run Backtrack Search"):
             backtracking_search(basicSudokuCSP)
