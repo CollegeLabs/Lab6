@@ -38,10 +38,9 @@ def main():
             AC3(basicSudokuCSP)
             buildGraph(basicSudokuCSP, nodeColors, True)
 
-            if st.button("Run Backtrack"):
-                backtracking_search(basicSudokuCSP)
-                buildGraph(basicSudokuCSP, nodeColors, True)
-                st.session_state["clicked"] = True
+        if st.button("Run Backtrack"):
+            backtracking_search(basicSudokuCSP)
+            buildGraph(basicSudokuCSP, nodeColors, True)
             
         
         #st.button("Run AC-3", on_click= , args= [option])
