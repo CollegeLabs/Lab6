@@ -39,8 +39,8 @@ def main():
             buildGraph(basicSudokuCSP, nodeColors, True)
 
             if st.button("Run Backtrack"):
-                SudokuCSP = backtracking_search(basicSudokuCSP)
-                buildGraph(SudokuCSP, nodeColors, True)
+                backtracking_search(basicSudokuCSP)
+                buildGraph(basicSudokuCSP, nodeColors, True)
             
         
         #st.button("Run AC-3", on_click= , args= [option])
@@ -137,6 +137,9 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
     nodes=list(SudokuCSP.variables)
 
     for node in nodes:
+        if ac3:
+            if len(SudokuCSP.curr_domains[node])==1:
+                nodeColorsDict.setdefault(node,nodeColors["filled"])
         if len(SudokuCSP.domains[node])==1:
             nodeColorsDict.setdefault(node,nodeColors["filled"])
             if ac3:
