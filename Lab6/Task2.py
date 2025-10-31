@@ -1,42 +1,21 @@
 # Import dependencies
 import streamlit as st
 import streamlit.components.v1 as components #to display the HTML code
-#from st_image_button import st_image_button
-from st_clickable_images import clickable_images
 
 import networkx as nx #Networkx for creating graph data
 from pyvis.network import Network #to create the graph as an interactive html object
-#from PIL import Image
 
-
-from src.CSPclass import CSPBasic
-from src.algorithms import AC3
+from src.CSPclass import *
+from src.algorithms import *
+from src.agents import *
+from src.utils import *
 
 nodeColors={
     "empty":"white",
     "filled": "yellow"
 }
 
-# List of image URLs or paths
-image_urls = [
-    "imgs/1.png",
-    "imgs/3.png",
-    "imgs/9.png",
-    "imgs/empty.png"
-    ]
-
-imgCell={
-    "1": 0,
-    "3":1,
-    "9":2,
-    "empty":3
-}
-
-def runAC3(csp):
-    st.session_state["clicked"]=True
-    AC3(csp)
-    return True
-
+#commit
 
 
 
@@ -45,67 +24,23 @@ def main():
     if "clicked" not in st.session_state:
         st.session_state["clicked"] = False
         
-    tab1, tab2 = st.tabs(["Initial Sudoku", "Graph of constraints"])
-    
-    
-    sudokuNeighbors,sudokuDomains,sudokuConstraints1=getSudokuData()        
-    basicSudokuCSP=CSPBasic(variables=sudokuNeighbors.keys(),neighbors=sudokuNeighbors, domains=sudokuDomains, constraints=sudokuConstraints1)
-    ac3=False
-    
-    if st.session_state["clicked"]== False:        
-        if st.button("Run AC-3"):
-            st.session_state["clicked"]=True
-            #st.text( st.session_state["clicked"])
-            AC3(basicSudokuCSP)
-            ac3=True
-            
-            
-        
-    
-    with tab1:
+    if not st.session_state["clicked"]:
+        #Set header title
         st.header("CSP: Simple Sudoku Example")
+        st.header("_Initial Sudoku._", divider=True)
         
-        # Define the number of rows you want
-        num_rows = 3
-        # Define the number of columns per row
-        columns_per_row = 3
-        vars=list(basicSudokuCSP.variables)
-        print(vars)
-        
-        
-        
-        j=0
-        
-        for i in range(num_rows):
-            # Create a set of columns for each row
-            cols = st.columns(columns_per_row)
-            
-            # Place elements within each column of the current row
-            for col_index, col in enumerate(cols):
-                with col:
-                    st.write(vars[j])
-                    if ac3:
-                        options=basicSudokuCSP.curr_domains[vars[j]]
-                    else:
-                        options=basicSudokuCSP.domains[vars[j]]
-                    if len(options)==1:
-                        st.text_input("filled",value=options[0], disabled =True, key=f"filled_cell_{vars[j]}", label_visibility="hidden")
-                        #st.number_input("filled",value=options[0], disabled =True, key=f"filled_cell_{vars[j]}", label_visibility="hidden", step=None)
-                    else:
-                        st.selectbox("select",options,label_visibility="hidden", key=f"empty_cell_{vars[j]}")
-                j+=1
-        
-            
-        
-    with tab2:
-        
+        sudokuNeighbors,sudokuDomains,sudokuConstraints1=getSudokuData()        
+        basicSudokuCSP=CSP(variables=sudokuNeighbors.keys(),neighbors=sudokuNeighbors, domains=sudokuDomains, constraints=sudokuConstraints1)
+
         buildGraph(basicSudokuCSP, nodeColors)
         
-        if ac3:
-            st.success("AC-3 applied. Check new domains")
-            buildGraph(basicSudokuCSP, nodeColors, ac3)
-        
- 
+    if st.button("Run AC-3"):
+        AC3(basicSudokuCSP)
+        buildGraph(basicSudokuCSP, nodeColors, True)
+
+        if st.button("Run Backtrack Search"):
+            backtracking_search(basicSudokuCSP)
+            buildGraph(basicSudokuCSP, nodeColors, False)
             
         
         #st.button("Run AC-3", on_click= , args= [option])
@@ -114,25 +49,69 @@ def main():
 
         
 def getSudokuData():
-    var1=list("ABC")
-    var2=range(1,4)
-    filled={'A3':3, 'B1':9,'C3':1}
+    var1=list("ABCDEFGHI")
+    var2=range(1,10)
+    filled = {
+    'A2': 1, 'A8': 6,
+    'B1': 3, 'B3': 9, 'B7': 1, 'B9': 5,
+    'C2': 8, 'C4': 3, 'C6': 5, 'C8': 7,
+    'D3': 2, 'D5': 7, 'D7': 8,
+    'E4': 6, 'E6': 8,
+    'F3': 8, 'F5': 9, 'F7': 2,
+    'G2': 2, 'G4': 4, 'G6': 1, 'G8': 9,
+    'H1': 9, 'H3': 4, 'H7': 6, 'H9': 1,
+    'I2': 3, 'I8': 8
+    }
 
     vars=set()
 
     for letter in var1:
         for number in var2:
             vars.add(letter+str(number))
-            sudokuNeighbors={}
+
+    sudokuNeighbors={}
 
     for letter in var1:
         for number in var2:
             sudokuNeighbors[letter+str(number)]=[]
-            
+
+    row_groups = [
+        ['A', 'B', 'C'], # top
+        ['D', 'E', 'F'], # middle
+        ['G', 'H', 'I']  # bottom
+    ]
+
+    col_groups = [
+        ['1', '2', '3'], # left
+        ['4', '5', '6'], # middle
+        ['7', '8', '9']  # right
+    ]
+
+    asterisk_group = [
+        ['B5','C3','C7',
+         'E2','E5','E8',
+         'G3','G7','H5']
+    ]
+
     for key1 in sudokuNeighbors.keys():
         for key2 in sudokuNeighbors.keys():
-            if key1!=key2:
-                sudokuNeighbors[key1].append(key2)
+            if key1 != key2:
+                if key1[0] == key2[0]:
+                    if key2 not in sudokuNeighbors[key1]:
+                        sudokuNeighbors[key1].append(key2) 
+                if key1[1] == key2[1]:
+                    if key2 not in sudokuNeighbors[key1]:
+                        sudokuNeighbors[key1].append(key2)
+                for row in row_groups:
+                    if key1[0] in row and key2[0] in row:
+                        for col in col_groups:
+                            if key1[1] in col and key2[1] in col:
+                                if key2 not in sudokuNeighbors[key1]:
+                                    sudokuNeighbors[key1].append(key2)
+                for asterisk in asterisk_group:
+                    if key1 in asterisk and key2 in asterisk:
+                        if key2 not in sudokuNeighbors[key1]:
+                            sudokuNeighbors[key1].append(key2)
             
     sudokuDomains={var:[filled[var]] if var in filled else [ch for ch in range(1,10)] for var in sudokuNeighbors.keys()}
     sudokuConstraints1 = lambda X, x, Y, y: x!=y
@@ -158,6 +137,11 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
     nodes=list(SudokuCSP.variables)
 
     for node in nodes:
+        if ac3:
+            if len(SudokuCSP.curr_domains[node])==1:
+                nodeColorsDict.setdefault(node,nodeColors["filled"])
+                nodeTitlesDict.setdefault(node,str(SudokuCSP.curr_domains[node][0]))
+                nodeLabelsDict.setdefault(node,str(SudokuCSP.curr_domains[node][0]))
         if len(SudokuCSP.domains[node])==1:
             nodeColorsDict.setdefault(node,nodeColors["filled"])
             if ac3:
@@ -178,15 +162,27 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
            
             
     x_coords = {}
-    y_coords = {}
+    y_coords = {} 
 
     for node in nodes:
-        if node[0].lower()=="a":
-            y_coords.setdefault(node,50)            
-        elif node[0].lower()=="b":
+        if node[0]=="A":
+            y_coords.setdefault(node,50)           
+        elif node[0]=="B":
             y_coords.setdefault(node,100)
-        elif node[0].lower()=="c":
+        elif node[0]=="C":
             y_coords.setdefault(node,150)
+        elif node[0]=="D":
+            y_coords.setdefault(node,200)
+        elif node[0]=="E":
+            y_coords.setdefault(node,250)
+        elif node[0]=="F":
+            y_coords.setdefault(node,300)
+        elif node[0]=="G":
+            y_coords.setdefault(node,350)
+        elif node[0]=="H":
+            y_coords.setdefault(node,400)
+        elif node[0]=="I":
+            y_coords.setdefault(node,450)
         x_coords.setdefault(node,int(node[1])*50)
            
             
@@ -196,7 +192,7 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
     
     # add the nodes
     for node in nodes:
-        g.add_node(node, color=nodeColorsDict[node], size=10, title=nodeTitlesDict[node], label=nodeLabelsDict[node],  x_coord=x_coords[node],y_coord=y_coords[node])
+        g.add_node(node, color=nodeColorsDict[node], size=10, title=nodeTitlesDict[node], label=nodeLabelsDict[node],  x=x_coords[node],y=y_coords[node])
 
     # add the edges
     print(SudokuCSP.neighbors)
@@ -214,7 +210,6 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
     print(g.edges)
     # generate the graph
     netSudoku.from_nx(g)
-    #netSudoku.toggle_physics(False)
     
     netSudoku.save_graph('L6_SimpleSudoku.html')
     HtmlFile = open(f'L6_SimpleSudoku.html', 'r', encoding='utf-8')
