@@ -19,7 +19,7 @@ nodeColors={
 
 
 
-
+'''
 def main():
     if "clicked" not in st.session_state:
         st.session_state["clicked"] = False
@@ -44,6 +44,37 @@ def main():
             
         
         #st.button("Run AC-3", on_click= , args= [option])
+'''
+def main():
+    st.header("CSP: Simple Sudoku Example")
+    st.header("_Initial Sudoku._", divider=True)
+
+    # Initialize CSP once
+    if "csp" not in st.session_state:
+        sudokuNeighbors, sudokuDomains, sudokuConstraints1 = getSudokuData()
+        st.session_state.csp = CSP(
+            variables=sudokuNeighbors.keys(),
+            neighbors=sudokuNeighbors,
+            domains=sudokuDomains,
+            constraints=sudokuConstraints1
+        )
+        st.session_state.ac3_done = False
+        buildGraph(st.session_state.csp, nodeColors)
+
+    # Buttons
+    run_ac3 = st.button("Run AC-3")
+    run_bt  = st.button("Run Backtrack Search", disabled=not st.session_state.ac3_done)
+
+    # AC-3 button logic
+    if run_ac3:
+        AC3(st.session_state.csp)
+        st.session_state.ac3_done = True
+        buildGraph(st.session_state.csp, nodeColors, True)
+
+    # Backtracking button logic (only works once AC-3 has run)
+    if run_bt:
+        backtracking_search(st.session_state.csp)
+        buildGraph(st.session_state.csp, nodeColors, False)
         
          
 
