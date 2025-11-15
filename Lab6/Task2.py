@@ -73,8 +73,9 @@ def main():
 
     # Backtracking button logic (only works once AC-3 has run)
     if run_bt:
-        backtracking_search(st.session_state.csp)
-        buildGraph(st.session_state.csp, nodeColors, False)
+        result = backtracking_search(st.session_state.csp)
+        st.session_state.bt_result = result
+        buildGraph(st.session_state.csp, nodeColors, False, assignment=result)
         
          
 
