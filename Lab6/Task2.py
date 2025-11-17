@@ -61,10 +61,6 @@ def main():
         st.session_state.ac3_done = False
         buildGraph(st.session_state.csp, nodeColors)
 
-    # Buttons
-    run_ac3 = st.button("Run AC-3", key="btn_ac3")
-    run_bt  = st.button("Run Backtrack Search", disabled=not st.session_state.ac3_done, key="btn_bt")
-
     if st.button("Run AC-3", key="btn_ac3"):
         AC3(st.session_state.csp)
         buildGraph(st.session_state.csp, nodeColors, True)
