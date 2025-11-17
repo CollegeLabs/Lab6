@@ -62,22 +62,22 @@ def main():
         buildGraph(st.session_state.csp, nodeColors)
 
     # Buttons
-    run_ac3 = st.button("Run AC 3")
-    run_bt  = st.button("Run Backtrack Search", disabled=not st.session_state.ac3_done)
+    run_ac3 = st.button("Run AC-3", key="btn_ac3")
+    run_bt  = st.button("Run Backtrack Search", disabled=not st.session_state.ac3_done, key="btn_bt")
 
-    if st.button("Run AC 3"):
+    if st.button("Run AC-3", key="btn_ac3"):
         AC3(st.session_state.csp)
         buildGraph(st.session_state.csp, nodeColors, True)
         st.session_state["ac3_done"] = True
 
-    if st.session_state.get("ac3_done") and st.button("Run Backtrack Search"):
+    if st.session_state.get("ac3_done") and st.button("Run Backtrack Search", key="btn_bt"):
         result = backtracking_search(st.session_state.csp)
 
-    for var, val in result.items():
-        st.session_state.csp.domains[var] = [val]
-        st.session_state.csp.curr_domains[var] = [val]
+        for var, val in result.items():
+            st.session_state.csp.domains[var] = [val]
+            st.session_state.csp.curr_domains[var] = [val]
 
-    buildGraph(st.session_state.csp, nodeColors, False)
+        buildGraph(st.session_state.csp, nodeColors, False)
         
          
 
