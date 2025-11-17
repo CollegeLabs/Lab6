@@ -65,17 +65,19 @@ def main():
     run_ac3 = st.button("Run AC-3")
     run_bt  = st.button("Run Backtrack Search", disabled=not st.session_state.ac3_done)
 
-    # AC-3 button logic
-    if run_ac3:
+    if st.button("Run AC-3"):
         AC3(st.session_state.csp)
-        st.session_state.ac3_done = True
         buildGraph(st.session_state.csp, nodeColors, True)
+        st.session_state["ac3_done"] = True
 
-    # Backtracking button logic (only works once AC-3 has run)
-    if run_bt:
+    if st.session_state.get("ac3_done") and st.button("Run Backtrack Search"):
         result = backtracking_search(st.session_state.csp)
-        st.session_state.bt_result = result
-        buildGraph(st.session_state.csp, nodeColors, False, assignment=result)
+
+    for var, val in result.items():
+        st.session_state.csp.domains[var] = [val]
+        st.session_state.csp.curr_domains[var] = [val]
+
+    buildGraph(st.session_state.csp, nodeColors, False)
         
          
 
