@@ -17,34 +17,6 @@ nodeColors={
 
 #commit
 
-
-
-'''
-def main():
-    if "clicked" not in st.session_state:
-        st.session_state["clicked"] = False
-        
-    if not st.session_state["clicked"]:
-        #Set header title
-        st.header("CSP: Simple Sudoku Example")
-        st.header("_Initial Sudoku._", divider=True)
-        
-        sudokuNeighbors,sudokuDomains,sudokuConstraints1=getSudokuData()        
-        basicSudokuCSP=CSP(variables=sudokuNeighbors.keys(),neighbors=sudokuNeighbors, domains=sudokuDomains, constraints=sudokuConstraints1)
-
-        buildGraph(basicSudokuCSP, nodeColors)
-        
-    if st.button("Run AC-3"):
-        AC3(basicSudokuCSP)
-        buildGraph(basicSudokuCSP, nodeColors, True)
-
-        if st.button("Run Backtrack Search"):
-            backtracking_search(basicSudokuCSP)
-            buildGraph(basicSudokuCSP, nodeColors, False)
-            
-        
-        #st.button("Run AC-3", on_click= , args= [option])
-'''
 def main():
     st.header("CSP: Simple Sudoku Example")
     st.header("_Initial Sudoku._", divider=True)
