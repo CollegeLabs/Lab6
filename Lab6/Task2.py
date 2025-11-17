@@ -21,6 +21,8 @@ def main():
     st.header("CSP: Simple Sudoku Example")
     st.header("_Initial Sudoku._", divider=True)
 
+    tab1, tab2, tab3 = st.tabs(["Initial", "AC-3", "Backtracking"])
+
     # Initialize CSP once
     if "csp" not in st.session_state:
         sudokuNeighbors, sudokuDomains, sudokuConstraints1 = getSudokuData()
@@ -31,6 +33,9 @@ def main():
             constraints=sudokuConstraints1
         )
         st.session_state.ac3_done = False
+        buildGraph(st.session_state.csp, nodeColors)
+
+    with tab1:
         buildGraph(st.session_state.csp, nodeColors)
 
     if st.button("Run AC-3", key="btn_ac3"):
@@ -46,6 +51,18 @@ def main():
             st.session_state.csp.curr_domains[var] = [val]
 
         buildGraph(st.session_state.csp, nodeColors, False)
+    
+    with tab2:
+        if st.session_state.ac3_done:
+            buildGraph(st.session_state.csp, nodeColors, True)
+        else:
+            st.info("Run AC-3 to view this graph.")
+
+    with tab3:
+        if st.session_state.bt_done:
+            buildGraph(st.session_state.csp, nodeColors, False)
+        else:
+            st.info("Run Backtracking after AC-3 to view this graph.")
         
          
 
@@ -215,7 +232,7 @@ def buildGraph(SudokuCSP, nodeColors, ac3=False):
     
     netSudoku.save_graph('L6_SimpleSudoku.html')
     HtmlFile = open(f'L6_SimpleSudoku.html', 'r', encoding='utf-8')
-    components.html(HtmlFile.read(), height = 1200,width=1000)
+    components.html(HtmlFile.read(), height = 800,width=1000)
     
     
     
