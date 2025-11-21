@@ -24,7 +24,7 @@ def AC3(csp):
       for Xk in csp.neighbors[Xi]:
         if Xk != Xj:
           queue.put((Xk, Xi))
-    print(f"Queue: {list(queue.queue)}")
+    #print(f"Queue: {list(queue.queue)}")
 
     '''print(f'Arc {(Xj, Xi)} is cheking')
     revised, checks1 = back_revise(csp, Xi, Xj, checks)
@@ -95,15 +95,26 @@ def unordered_domain_values(var, assignment, csp):
     """The default value order."""
     return csp.choices(var)
 
-
 def backtracking_search(csp, select_unassigned_variable=first_unassigned_variable, order_domain_values=unordered_domain_values):
-    
+
     def backtrack(assignment):
+        print("Test1")
         if len(assignment) == len(csp.variables):
+            print(assignment)
             return assignment
 
         var = select_unassigned_variable(assignment, csp)
         for value in order_domain_values(var, assignment, csp):
+            print(f"\ntesting Variable {var} = {value}")
+
+            for neighbor in csp.neighbors[var]:
+                if neighbor in assignment:
+                    conflict = csp.constraint(var, value, neighbor, assignment[neighbor])
+                    print(f"  Checking {var}({value}) against {neighbor}({assignment[neighbor]}) → conflict={conflict}")
+
+            total_conflicts = csp.nconflicts(var, value, assignment)
+            print(f"  Total conflicts for {var} = {value}: {total_conflicts}")
+            
             if csp.nconflicts(var, value, assignment)==0:
                 csp.assign(var, value, assignment)
                 result = backtrack(assignment)
@@ -115,5 +126,3 @@ def backtracking_search(csp, select_unassigned_variable=first_unassigned_variabl
 
     result = backtrack({})
     return result
-
-
