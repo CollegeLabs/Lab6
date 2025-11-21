@@ -98,7 +98,6 @@ def unordered_domain_values(var, assignment, csp):
 def backtracking_search(csp, select_unassigned_variable=first_unassigned_variable, order_domain_values=unordered_domain_values):
 
     def backtrack(assignment):
-        print("Test1")
         if len(assignment) == len(csp.variables):
             print(assignment)
             return assignment
@@ -109,8 +108,11 @@ def backtracking_search(csp, select_unassigned_variable=first_unassigned_variabl
 
             for neighbor in csp.neighbors[var]:
                 if neighbor in assignment:
-                    conflict = csp.constraint(var, value, neighbor, assignment[neighbor])
+                    conflict = csp.constraints(var, value, neighbor, assignment[neighbor])
                     print(f"  Checking {var}({value}) against {neighbor}({assignment[neighbor]}) → conflict={conflict}")
+                    if conflict == False:
+                       print(f" Removing value {value} from {var}")
+                       
 
             total_conflicts = csp.nconflicts(var, value, assignment)
             print(f"  Total conflicts for {var} = {value}: {total_conflicts}")
